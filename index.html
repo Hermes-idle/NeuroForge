@@ -3,81 +3,310 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NeuroForge - AI 艺术生成器</title>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <title>NeuroForge · AI 艺术生成</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #ffffff;
+            color: #1a1a1a;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        /* 头部 */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .tagline {
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 400;
+        }
+
+        /* 生成区域 */
+        .generator {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .prompt-input {
+            width: 100%;
+            min-height: 120px;
+            border: 1px solid #e1e5e9;
+            border-radius: 12px;
+            padding: 1rem;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            background: white;
+            transition: all 0.2s ease;
+        }
+
+        .prompt-input:focus {
+            outline: none;
+            border-color: #0070f3;
+            box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
+        }
+
+        .input-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .char-count {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .generate-btn {
+            background: #0070f3;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .generate-btn:hover {
+            background: #0051cc;
+            transform: translateY(-1px);
+        }
+
+        .generate-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 结果区域 */
+        .result-section {
+            text-align: center;
+        }
+
+        .image-placeholder {
+            background: #f8f9fa;
+            border: 2px dashed #e1e5e9;
+            border-radius: 12px;
+            padding: 3rem;
+            color: #888;
+            margin-bottom: 1rem;
+        }
+
+        .image-result {
+            display: none;
+        }
+
+        .generated-image {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .action-btn {
+            background: white;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            padding: 0.6rem 1.2rem;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            border-color: #0070f3;
+            color: #0070f3;
+        }
+
+        /* 特性 */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .feature {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .feature p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 <body>
-    <!-- 粒子背景 -->
-    <canvas id="particleCanvas"></canvas>
-
-    <!-- 主容器 -->
     <div class="container">
-        <!-- 头部 -->
         <header class="header">
-            <h1 class="logo" data-text="NEUROFORGE">NEUROFORGE</h1>
-            <p class="tagline">从思维到视觉的神经锻造</p>
+            <h1 class="logo">NeuroForge</h1>
+            <p class="tagline">从思维到视觉的简洁创造</p>
         </header>
-    
-        <!-- 生成区域 -->
-        <main class="main-content">
-            <div class="generator-card">
-                <div class="input-section">
-                    <textarea 
-                        id="promptInput" 
-                        placeholder="描述你想象中的画面... 例如：赛博朋克城市夜景，霓虹灯光，雨天街道"
-                        maxlength="200"
-                    ></textarea>
-                    <div class="input-footer">
-                        <span id="charCount">0/200</span>
-                        <button id="generateBtn" class="generate-btn">
-                            <span class="btn-text">生成艺术</span>
-                            <div class="btn-loader" id="btnLoader"></div>
-                        </button>
-                    </div>
-                </div>
-    
-                <div class="result-section">
-                    <div class="image-placeholder" id="imagePlaceholder">
-                        <div class="placeholder-content">
-                            <div class="placeholder-icon">🎨</div>
-                            <p>你的 AI 艺术作品将在这里展示</p>
-                        </div>
-                    </div>
-                    <div class="image-result" id="imageResult" style="display: none;">
-                        <img id="generatedImage" src="" alt="生成的AI艺术">
-                        <div class="image-actions">
-                            <button id="downloadBtn" class="action-btn">下载图片</button>
-                            <button id="regenerateBtn" class="action-btn">重新生成</button>
-                        </div>
-                    </div>
-                </div>
+
+        <main class="generator">
+            <textarea 
+                class="prompt-input" 
+                placeholder="描述你想象中的画面... 例如：宁静的山水风景，晨雾缭绕的山峰"
+                maxlength="200"
+            ></textarea>
+            <div class="input-footer">
+                <span class="char-count">0/200</span>
+                <button class="generate-btn">生成艺术</button>
             </div>
         </main>
-    
-        <!-- 特性展示 -->
-        <section class="features">
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">⚡</div>
-                    <h3>即时生成</h3>
-                    <p>输入文字描述，秒级获得独特艺术作品</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🎨</div>
-                    <h3>多样风格</h3>
-                    <p>支持赛博朋克、写实、抽象等多种艺术风格</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🆓</div>
-                    <h3>完全免费</h3>
-                    <p>无使用限制，无隐藏费用，真正的开放访问</p>
+
+        <section class="result-section">
+            <div class="image-placeholder">
+                <p>你的 AI 艺术作品将在这里展示</p>
+            </div>
+            <div class="image-result">
+                <img class="generated-image" src="" alt="生成的AI艺术">
+                <div class="image-actions">
+                    <button class="action-btn">下载图片</button>
+                    <button class="action-btn">重新生成</button>
                 </div>
             </div>
         </section>
+
+        <section class="features">
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>快速生成</h3>
+                <p>简洁的界面，快速的创作体验</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🎨</div>
+                <h3>多样风格</h3>
+                <p>支持多种艺术风格和创作方向</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🆓</div>
+                <h3>完全免费</h3>
+                <p>无限制使用，专注于创作本身</p>
+            </div>
+        </section>
     </div>
-    
-    <script src="particles.js"></script>
-    <script src="script.js"></script>
+
+    <script>
+        // 简洁的功能实现
+        class NeuroForge {
+            constructor() {
+                this.promptInput = document.querySelector('.prompt-input');
+                this.generateBtn = document.querySelector('.generate-btn');
+                this.charCount = document.querySelector('.char-count');
+                this.imagePlaceholder = document.querySelector('.image-placeholder');
+                this.imageResult = document.querySelector('.image-result');
+                this.generatedImage = document.querySelector('.generated-image');
+                
+                this.init();
+            }
+            
+            init() {
+                this.promptInput.addEventListener('input', () => this.updateCharCount());
+                this.generateBtn.addEventListener('click', () => this.generateArt());
+                
+                // 回车键生成
+                this.promptInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                        this.generateArt();
+                    }
+                });
+            }
+            
+            updateCharCount() {
+                const count = this.promptInput.value.length;
+                this.charCount.textContent = `${count}/200`;
+            }
+            
+            async generateArt() {
+                const prompt = this.promptInput.value.trim();
+                
+                if (!prompt) {
+                    alert('请输入描述文字');
+                    return;
+                }
+                
+                // 显示加载状态
+                this.generateBtn.textContent = '生成中...';
+                this.generateBtn.disabled = true;
+                
+                try {
+                    // 这里应该调用真实的 AI API
+                    const imageUrl = await this.simulateGeneration(prompt);
+                    
+                    this.generatedImage.src = imageUrl;
+                    this.imagePlaceholder.style.display = 'none';
+                    this.imageResult.style.display = 'block';
+                    
+                } catch (error) {
+                    alert('生成失败，请重试');
+                } finally {
+                    this.generateBtn.textContent = '生成艺术';
+                    this.generateBtn.disabled = false;
+                }
+            }
+            
+            simulateGeneration(prompt) {
+                return new Promise((resolve) => {
+                    setTimeout(() => {
+                        // 使用 Unsplash 的随机图片作为演示
+                        const width = 600;
+                        const height = 400;
+                        const randomId = Math.floor(Math.random() * 1000);
+                        resolve(`https://picsum.photos/${width}/${height}?random=${randomId}`);
+                    }, 2000);
+                });
+            }
+        }
+        
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            new NeuroForge();
+        });
+    </script>
 </body>
 </html>
