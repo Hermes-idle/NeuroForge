@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeuroForge - AI 艺术生成器</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 粒子背景 -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- 主容器 -->
+    <div class="container">
+        <!-- 头部 -->
+        <header class="header">
+            <h1 class="logo" data-text="NEUROFORGE">NEUROFORGE</h1>
+            <p class="tagline">从思维到视觉的神经锻造</p>
+        </header>
+    
+        <!-- 生成区域 -->
+        <main class="main-content">
+            <div class="generator-card">
+                <div class="input-section">
+                    <textarea 
+                        id="promptInput" 
+                        placeholder="描述你想象中的画面... 例如：赛博朋克城市夜景，霓虹灯光，雨天街道"
+                        maxlength="200"
+                    ></textarea>
+                    <div class="input-footer">
+                        <span id="charCount">0/200</span>
+                        <button id="generateBtn" class="generate-btn">
+                            <span class="btn-text">生成艺术</span>
+                            <div class="btn-loader" id="btnLoader"></div>
+                        </button>
+                    </div>
+                </div>
+    
+                <div class="result-section">
+                    <div class="image-placeholder" id="imagePlaceholder">
+                        <div class="placeholder-content">
+                            <div class="placeholder-icon">🎨</div>
+                            <p>你的 AI 艺术作品将在这里展示</p>
+                        </div>
+                    </div>
+                    <div class="image-result" id="imageResult" style="display: none;">
+                        <img id="generatedImage" src="" alt="生成的AI艺术">
+                        <div class="image-actions">
+                            <button id="downloadBtn" class="action-btn">下载图片</button>
+                            <button id="regenerateBtn" class="action-btn">重新生成</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    
+        <!-- 特性展示 -->
+        <section class="features">
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>即时生成</h3>
+                    <p>输入文字描述，秒级获得独特艺术作品</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>多样风格</h3>
+                    <p>支持赛博朋克、写实、抽象等多种艺术风格</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🆓</div>
+                    <h3>完全免费</h3>
+                    <p>无使用限制，无隐藏费用，真正的开放访问</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script src="particles.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
